@@ -1,7 +1,10 @@
 const recipeModel = require("../models/recipeModel.js");
 
 async function getRecipes(req, res) {
-  const recipes = await recipeModel.getRecipes();
+  let recipes = {};
+  Object.keys(req.query).length > 0
+    ? (recipes = await recipeModel.getFilteredRecipes(req.query))
+    : (recipes = await recipeModel.getRecipes());
   res.status(200).json(recipes);
 }
 
