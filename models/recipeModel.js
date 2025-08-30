@@ -7,7 +7,7 @@ async function getRecipes() {
 }
 
 async function getRecipeById(id) {
-  const recipes = getRecipes();
+  const recipes = await getRecipes();
   const recipe = recipes.find((recipe) => recipe.id === id);
   return recipe;
 }
