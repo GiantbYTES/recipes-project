@@ -15,4 +15,9 @@ async function getRecipeById(req, res) {
     : res.status(404).json({ error: "Unknown note id" });
 }
 
-module.exports = { getRecipes, getRecipeById };
+async function addRecipe(req, res) {
+  const newRecipe = await recipeModel.addRecipe(req.body);
+  res.status(201).json(newRecipe);
+}
+
+module.exports = { getRecipes, getRecipeById, addRecipe };

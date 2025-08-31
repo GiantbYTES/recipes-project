@@ -1,5 +1,6 @@
 const fs = require("fs");
-const { nanoid } = require("nanoid");
+// const { nanoid } = require("nanoid");
+const { v4: uuidv4 } = require("uuid");
 
 async function getRecipes() {
   const data = await fs.promises.readFile("./data/recipes.json");
@@ -42,4 +43,15 @@ async function getRecipeById(id) {
   return recipe;
 }
 
-module.exports = { getRecipes, getFilteredRecipes, getRecipeById };
+async function addRecipe(newRecipe) {
+  const recipes = await getRecipes();
+  newRecipe.id = uuidv4();
+  newRecipe.createdAt = new Date();
+  newRecipe.ingredients = JSON.parse(newRecipe.ingredients);
+  newRecipe.instructions = JSON.parse(newRecipe.instructions);
+  recipes.push(newRecipe);
+  await fs.promises.writeFile("./data/recipes.json", JSON.stringify(recipes));
+  return newRecipe;
+}
+
+module.exports = { getRecipes, getFilteredRecipes, getRecipeById, addRecipe };

@@ -84,5 +84,40 @@
     "difficulty": "hard",
     "rating": 4.9,
     "createdAt": "2025-02-01T20:00:00.000Z"
+  },
+  {
+    "title": "Vegetable Soup",
+    "description": "A hearty and healthy soup packed with fresh vegetables and herbs.",
+    "ingredients": [
+      "2 tbsp olive oil",
+      "1 onion",
+      "2 carrots",
+      "2 celery stalks",
+      "2 potatoes",
+      "2 zucchinis",
+      "2 tomatoes",
+      "1 liter vegetable broth",
+      "2 cloves garlic",
+      "1 tsp dried thyme",
+      "1 bay leaf",
+      "Salt",
+      "Black pepper",
+      "Fresh parsley"
+    ],
+    "instructions": [
+      "Chop all vegetables into bite-sized pieces.",
+      "Heat olive oil in a large pot and sauté onion, carrot, and celery until softened.",
+      "Add garlic, potatoes, zucchini, and tomatoes and cook for 5 minutes.",
+      "Pour in vegetable broth, add thyme and bay leaf, then bring to a boil.",
+      "Reduce heat and simmer for 25 minutes until vegetables are tender.",
+      "Season with salt and pepper.",
+      "Garnish with fresh parsley before serving."
+    ],
+    "cookingTime": "40",
+    "servings": "6",
+    "difficulty": "easy",
+    "rating": "4.4",
+    "id": "5d6b4151-1fab-4144-a891-963df3ed246a",
+    "createdAt": "2025-08-31T10:55:11.629Z"
   }
 ]
