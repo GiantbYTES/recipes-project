@@ -47,8 +47,7 @@ async function addRecipe(newRecipe) {
   const recipes = await getRecipes();
   newRecipe.id = uuidv4();
   newRecipe.createdAt = new Date();
-  newRecipe.ingredients = JSON.parse(newRecipe.ingredients);
-  newRecipe.instructions = JSON.parse(newRecipe.instructions);
+  // No need to parse - ingredients and instructions are already arrays from JSON
   recipes.push(newRecipe);
   await fs.promises.writeFile("./data/recipes.json", JSON.stringify(recipes));
   return newRecipe;
