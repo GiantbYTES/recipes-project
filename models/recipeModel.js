@@ -53,4 +53,35 @@ async function addRecipe(newRecipe) {
   return newRecipe;
 }
 
-module.exports = { getRecipes, getFilteredRecipes, getRecipeById, addRecipe };
+async function updateRecipe(oldId, updatedData) {
+  const existingRecipe = await getRecipeById(oldId);
+  const recipes = await getRecipes();
+  const recipeIndex = recipes.findIndex((recipe) => recipe.id === oldId);
+  const updatedRecipe = {
+    ...existingRecipe,
+    ...updatedData,
+    id: oldId,
+    createdAt: new Date(),
+  };
+  recipes[recipeIndex] = updatedRecipe;
+  await fs.promises.writeFile("./data/recipes.json", JSON.stringify(recipes));
+  return updatedRecipe;
+}
+
+async function deleteRecipe(id) {
+  const toDelete = await getRecipeById(id);
+  const recipes = await getRecipes();
+  const recipeIndex = recipes.findIndex((recipe) => recipe.id === id);
+  recipes.splice(recipeIndex, 1);
+  await fs.promises.writeFile("./data/recipes.json", JSON.stringify(recipes));
+  return toDelete;
+}
+
+module.exports = {
+  getRecipes,
+  getFilteredRecipes,
+  getRecipeById,
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+};

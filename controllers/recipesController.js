@@ -20,4 +20,23 @@ async function addRecipe(req, res) {
   res.status(201).json(newRecipe);
 }
 
-module.exports = { getRecipes, getRecipeById, addRecipe };
+async function updateRecipe(req, res) {
+  const updatedRecipe = await recipeModel.updateRecipe(req.params.id, req.body);
+  updatedRecipe
+    ? res.status(200).json(updatedRecipe)
+    : res.status(404).json({ error: "Recipe not found" });
+}
+async function deleteRecipe(req, res) {
+  const deletedRecipe = await recipeModel.deleteRecipe(req.params.id);
+  deletedRecipe
+    ? res.status(200).json(deletedRecipe)
+    : res.status(404).json({ error: "Recipe not found" });
+}
+
+module.exports = {
+  getRecipes,
+  getRecipeById,
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+};
