@@ -47,7 +47,6 @@ async function addRecipe(newRecipe) {
   const recipes = await getRecipes();
   newRecipe.id = uuidv4();
   newRecipe.createdAt = new Date();
-  // No need to parse - ingredients and instructions are already arrays from JSON
   recipes.push(newRecipe);
   await fs.promises.writeFile("./data/recipes.json", JSON.stringify(recipes));
   return newRecipe;
@@ -77,6 +76,36 @@ async function deleteRecipe(id) {
   return toDelete;
 }
 
+async function getRecipesStats() {
+  const recipes = await getRecipes();
+  const toReturn = {};
+  toReturn.totalNumOfRecipes = recipes.length;
+  toReturn.averageCookingTime = calcAverageCookingTime(recipes);
+  toReturn.recipeByDifficulty = recipesByDiffLevel(recipes);
+  return toReturn;
+}
+
+function calcAverageCookingTime(recipes) {
+  const totalTime = recipes.reduce((sum, recipe) => {
+    return sum + Number(recipe.cookingTime);
+  }, 0);
+  return totalTime / recipes.length;
+}
+
+function recipesByDiffLevel(recipes) {
+  const toReturn = { easy: 0, medium: 0, hard: 0 };
+  recipes.forEach((recipe) => {
+    if (recipe.difficulty === "easy") {
+      toReturn.easy++;
+    } else if (recipe.difficulty === "medium") {
+      toReturn.medium++;
+    } else if (recipe.difficulty === "hard") {
+      toReturn.hard++;
+    }
+  });
+  return toReturn;
+}
+
 module.exports = {
   getRecipes,
   getFilteredRecipes,
@@ -84,4 +113,5 @@ module.exports = {
   addRecipe,
   updateRecipe,
   deleteRecipe,
+  getRecipesStats,
 };

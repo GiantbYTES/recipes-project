@@ -1,37 +1,50 @@
 const recipeModel = require("../models/recipeModel.js");
+const {
+  createError,
+  asyncErrorHandler,
+} = require("../middlewares/errorHandling.js");
 
-async function getRecipes(req, res) {
+const getRecipes = asyncErrorHandler(async (req, res) => {
   let recipes = {};
   Object.keys(req.query).length > 0
     ? (recipes = await recipeModel.getFilteredRecipes(req.query))
     : (recipes = await recipeModel.getRecipes());
   res.status(200).json(recipes);
-}
+});
 
-async function getRecipeById(req, res) {
+const getRecipeById = asyncErrorHandler(async (req, res, next) => {
   const recipe = await recipeModel.getRecipeById(req.params.id);
-  recipe
-    ? res.status(200).json(recipe)
-    : res.status(404).json({ error: "Unknown note id" });
-}
+  if (!recipe) {
+    throw createError("Recipe not found", 404);
+  }
+  res.status(200).json(recipe);
+});
 
-async function addRecipe(req, res) {
+const addRecipe = asyncErrorHandler(async (req, res) => {
   const newRecipe = await recipeModel.addRecipe(req.body);
   res.status(201).json(newRecipe);
-}
+});
 
-async function updateRecipe(req, res) {
+const updateRecipe = asyncErrorHandler(async (req, res, next) => {
   const updatedRecipe = await recipeModel.updateRecipe(req.params.id, req.body);
-  updatedRecipe
-    ? res.status(200).json(updatedRecipe)
-    : res.status(404).json({ error: "Recipe not found" });
-}
-async function deleteRecipe(req, res) {
+  if (!updatedRecipe) {
+    throw createError("Recipe not found", 404);
+  }
+  res.status(200).json(updatedRecipe);
+});
+
+const deleteRecipe = asyncErrorHandler(async (req, res, next) => {
   const deletedRecipe = await recipeModel.deleteRecipe(req.params.id);
-  deletedRecipe
-    ? res.status(200).json(deletedRecipe)
-    : res.status(404).json({ error: "Recipe not found" });
-}
+  if (!deletedRecipe) {
+    throw createError("Recipe not found", 404);
+  }
+  res.status(200).json(deletedRecipe);
+});
+
+const getRecipesStats = asyncErrorHandler(async (req, res) => {
+  const recipesStats = await recipeModel.getRecipesStats();
+  res.status(200).json(recipesStats);
+});
 
 module.exports = {
   getRecipes,
@@ -39,4 +52,5 @@ module.exports = {
   addRecipe,
   updateRecipe,
   deleteRecipe,
+  getRecipesStats,
 };
