@@ -1,8 +1,5 @@
-function logger(req, res, next) {
-  console.log(
-    `Console: ${new Date().toISOString()} - ${req.method} ${req.url}`
-  );
-  next();
-}
+var morgan = require("morgan");
+
+const logger = morgan("combined");
 
 module.exports = { logger };
