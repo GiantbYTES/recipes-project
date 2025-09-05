@@ -7,7 +7,7 @@ const {
   deleteRecipe,
   getRecipesStats,
 } = require("../controllers/recipesController");
-
+const { authenticate } = require("../middlewares/authenticate");
 const { recipeValidation } = require("../middlewares/recipeValidation");
 
 const router = express.Router();
