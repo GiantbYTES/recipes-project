@@ -2,6 +2,14 @@ const bcrypt = require("bcrypt");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize("mysql://root:tvnVbgMI@localhost:3307/recipes");
 
+async function getUserById(id) {
+  const [user] = await sequelize.query(
+    `SELECT id, email, username, firstName, lastName FROM users WHERE id=:id`,
+    { replacements: { id } }
+  );
+  return user[0];
+}
+
 async function getUser(email) {
   const [user] = await sequelize.query(
     `SELECT * FROM users WHERE email=:email`,
@@ -49,5 +57,6 @@ async function register(email, password, username, firstName, lastName) {
   console.log("user was added");
   return success;
 }
+async function profile(token, user) {}
 
-module.exports = { login, register };
+module.exports = { login, register, profile, getUserById };

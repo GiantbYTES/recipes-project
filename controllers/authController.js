@@ -42,4 +42,13 @@ async function register(req, res, next) {
   }
 }
 
-module.exports = { login, register };
+async function profile(req, res, next) {
+  try {
+    const user = req.user;
+    res.status(200).json({ user });
+  } catch (err) {
+    next({ status: 500, message: "Error retrieving user profile" });
+  }
+}
+
+module.exports = { login, register, profile };
