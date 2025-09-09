@@ -54,9 +54,15 @@ async function getRecipeById(id, userId) {
 
 async function addRecipe(newRecipe, userId, file) {
   try {
+    const isPostgres = sequelize.getDialect() === "postgres";
     const uploadResult = await cloudinary.uploader.upload(file.path);
-    const query = `INSERT INTO recipes (title, description, ingredients, instructions, cookingTime, servings, difficulty, imageUrl, isPublic, userId, createdAt, updatedAt)
-    VALUES (:title, :description, :ingredients, :instructions, :cookingTime, :servings, :difficulty, :imageUrl, :isPublic, :userId, NOW(), NOW())`;
+    // const query = `INSERT INTO recipes (title, description, ingredients, instructions, cookingTime, servings, difficulty, imageUrl, isPublic, userId, createdAt, updatedAt)
+    // VALUES (:title, :description, :ingredients, :instructions, :cookingTime, :servings, :difficulty, :imageUrl, :isPublic, :userId, NOW(), NOW())`;
+    const query = isPostgres
+      ? `INSERT INTO recipes (title, description, ingredients, instructions, cookingTime, servings, difficulty, "imageUrl", isPublic, "userId", createdAt, updatedAt)
+     VALUES (:title, :description, :ingredients, :instructions, :cookingTime, :servings, :difficulty, :imageUrl, :isPublic, :userId, NOW(), NOW()) RETURNING id`
+      : `INSERT INTO recipes (title, description, ingredients, instructions, cookingTime, servings, difficulty, imageUrl, isPublic, userId, createdAt, updatedAt)
+     VALUES (:title, :description, :ingredients, :instructions, :cookingTime, :servings, :difficulty, :imageUrl, :isPublic, :userId, NOW(), NOW()) RETURNING id`;
     const [result] = await sequelize.query(query, {
       replacements: {
         title: newRecipe.title,
@@ -71,7 +77,7 @@ async function addRecipe(newRecipe, userId, file) {
         userId: userId,
       },
     });
-    return getRecipeById(result.insertId, userId);
+    return getRecipeById(isPostgres ? results[0].id : results);
   } finally {
     file && fs.promises.unlink(file.path);
   }

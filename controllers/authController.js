@@ -12,7 +12,12 @@ async function login(req, res, next) {
       next({ status: 401, message: "invalid email or password" });
     }
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "24h" });
-    res.status(200).json({ token, user });
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    });
+    res.status(200).send(user);
   } catch (err) {
     next({ status: 401, message: err });
   }

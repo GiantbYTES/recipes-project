@@ -36,7 +36,15 @@ async function setUser(email, password, username, firstName, lastName) {
 }
 
 async function login(email, password) {
-  const user = await getUser(email.toLowerCase());
+  const query = `
+  SELECT *
+  FROM users
+  WHERE email=:email
+  `;
+  const [results, metadata] = await sequelize.query(query, {
+    replacements: { email },
+  });
+  const user = results[0];
   if (user && (await bcrypt.compare(password, user.password))) {
     const { password: _, ...userNoPassword } = user;
     return userNoPassword;
