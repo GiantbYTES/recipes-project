@@ -5,6 +5,8 @@ const { logger } = require("./middlewares/logging.js");
 const { errorHandler } = require("./middlewares/errorHandling.js");
 const recipesRouter = require("./routes/recipesRouter.js");
 const authRouter = require("./routes/authRouter.js");
+const favoritesRouter = require("./routes/favoritesRouter.js");
+const { sequelize } = require("./db/models/index.js");
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/recipes", recipesRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/users/favorites", favoritesRouter);
 
 app.get("/sanity", (req, res) => {
   res.send("Server is running");
@@ -23,17 +26,17 @@ app.get("/sanity", (req, res) => {
 
 app.use(errorHandler);
 
-// async function testConnection() {
-//   try {
-//     await sequelize.authenticate();
-//     console.log("✅ Database connection established successfully.");
-//   } catch (error) {
-//     console.error("❌ Unable to connect to database:", error);
-//   }
-// }
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Database connection established successfully.");
+  } catch (error) {
+    console.error("❌ Unable to connect to database:", error);
+  }
+}
 
 const port = 3000;
 app.listen(port, async function () {
   console.log(`Server running on ${port}`);
-  // await testConnection();
+  await testConnection();
 });
